@@ -3,15 +3,21 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var RecipeSchema = new Schema ({
-    title: {
+    name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     link: {
         type: String,
-        required: true,
-        unique: true
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
     },
     note: {
         type: Schema.Types.ObjectId,
