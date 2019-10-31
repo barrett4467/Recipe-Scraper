@@ -19,8 +19,8 @@ app.use(express.static("public"));
 
 var exphbs = require("express-handlebars");
 
-// app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-// app.set("view engine", "handlebars");
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 mongoose.connect("mongodb://localhost/recipes", { useNewUrlParser: true});
 
@@ -58,13 +58,37 @@ app.get("/scrape", function(req, res){
 app.get("/recipe", function(req, res){
     db.Recipe.find({})
     .then(function(recipe){
+        // var hbsObject= {
+        //     recipe
+        // }
+        // console.log(hbsObject);
         res.json(recipe);
     }).catch(function(err){
         if (err) res.json(err);
     });
 });
-//do an get route and findone / add note 
-//do a post route to save note 
+app.post("/notes/:id", function(req, res){
+    console.log(req.body);
+
+    db.Note.create(req.body)
+    .then(function(note){
+       return db.Recipe.findOneAndUpdate({_id: req.params.id}, {$set: {note: note._id}}, {new: true}) 
+    })
+    .then(function(recipe){
+        res.json(recipe);
+    }).catch(function(err){
+        if (err) res.json(err);
+    })
+});
+app.get("/notes/:id", function(req, res){
+    db.Recipe.findOne({_id: req.params.id})
+    .populate("note")
+    .then(function(note){
+        res.json(note);
+    }).catch(function(err){
+        if (err) res.json(err);
+    });
+});
 
 app.listen(PORT, function(){
     console.log(`App listening on Port: ${PORT}`);

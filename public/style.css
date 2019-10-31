@@ -1,0 +1,33 @@
+.container {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.recipe {
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 25%;
+    margin: 0.25rem;
+    padding: .5rem;
+    box-shadow: 5px 10px 10px #605b57;
+    border: 1px solid #605b57;
+    border-radius: 15px;
+    background-color: #f2fbe0;
+}
+.recipe button {
+    position: relative;
+    right: -6px;
+    bottom: 4px;
+    border: 1px solid #605b57;
+    border-radius: 21px;
+    background-color: #acc189;
+}
+
+img {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    border: 1px solid #605b57;
+    border-radius: 15px;
+}

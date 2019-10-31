@@ -1,4 +1,8 @@
 <h1>Recipe Scraper</h1>
-    {{#each recipes}}
-        {{> recipes/recipes-block}}
+<ul>
+    {{#each recipe}}
+    <li>{{name}}</li>
+        {{!-- {{> recipes/recipes-block}} --}}
     {{/each}}
+</ul>
+
