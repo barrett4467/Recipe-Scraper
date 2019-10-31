@@ -58,11 +58,19 @@ app.get("/scrape", function(req, res){
 app.get("/recipe", function(req, res){
     db.Recipe.find({})
     .then(function(recipe){
-        // var hbsObject= {
-        //     recipe
-        // }
-        // console.log(hbsObject);
+        // console.log(recipe);
+        var recipes= [];
+        for (var i = 0; i < recipe.length; i ++){
+            recipes.push(recipe[i]);
+        }
+        console.log("Recipe: " + recipes.length);//15
+
+        var hbsObject= {
+            recipe: recipes
+        }
+        console.log(hbsObject);
         res.json(recipe);
+        // res.render("index");
     }).catch(function(err){
         if (err) res.json(err);
     });
