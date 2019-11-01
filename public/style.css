@@ -15,7 +15,7 @@
     border-radius: 15px;
     background-color: #f2fbe0;
 }
-.recipe button {
+.recipe button, nav button {
     position: relative;
     right: -6px;
     bottom: 4px;

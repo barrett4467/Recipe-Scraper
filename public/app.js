@@ -1,7 +1,7 @@
 $.getJSON("/recipe", function(data){
     console.log(data);
     for (var i = 0; i < data.length; i++){
-        $("#recipes").append(`<div class="recipe" data-id=${data[i]._id}><img alt=${data[i].name} src=${data[i].image}><h3><a target="_blank" href="${data[i].link}">${data[i].name}</a></h3><p>${data[i].description}</p><button class= "add-notes" data-id=${data[i]._id}>Add Note</a></button></div>`);
+        $("#recipes").append(`<div class="recipe" data-id=${data[i]._id}><img alt=${data[i].name} src=${data[i].image}><h3><a target="_blank" href="${data[i].link}">${data[i].name}</a></h3><p>${data[i].description}</p><button class= "add-notes" data-id=${data[i]._id}>Add Note</a></button><button class="save-recipe" data-id="${data[i]._id}">Save</button></div>`);
         
         if (data[i].note){
             $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id}>View Notes</button>`);
@@ -42,6 +42,16 @@ $.getJSON("/recipe", function(data){
 
             $(`<h3>${recipe.note.title}: ${recipe.note.body}</h3>`).modal();
             
+        })
+    });
+    $(".save-recipe").on("click", function(){
+        var id = $(this).attr("data-id");
+        console.log(id);
+        this.attr("data-saved", true);
+
+        $.ajax({
+            method: "POST",
+            url: "/recipe-box"
         })
     })
     
