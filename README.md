@@ -1,1 +1,2 @@
 # Recipe-Scraper
+Recipe Scraper is an application built using axios to scrape allrecipes.com and store the information in a MongoDB database. Users can add notes and save recipes to view later. The application leverages Cheerio as well as mongoose. 
