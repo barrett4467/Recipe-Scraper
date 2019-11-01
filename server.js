@@ -50,7 +50,11 @@ app.get("/scrape", function(req, res){
                 image: $(element).find("img").data("original-src"),
                 description: $(element).find("div.fixed-recipe-card__description").text().trim()
             }
-            // db.Recipe.drop();
+            db.Recipe.deleteMany()
+            .then(function(dbRecipes){
+                console.log("Dropped!!");
+                console.log(dbRecipes);
+            })
             // db.Note.drop();
             // console.log(recipes);
             db.Recipe.create(recipes)
@@ -130,7 +134,7 @@ app.get("/recipe-box", function(req, res){
     .then(function(saved){
         console.log("Saved: ");
         console.log(saved);
-        res.json(saved)
+        res.json(saved);
     })
 })
 

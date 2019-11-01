@@ -10,22 +10,33 @@ $(".scrape").on("click", function(){
 
 function getRecipes(){
     $.getJSON("/recipe", function(data){
+        $(".container").prepend("<nav><button class='view-all-recipes'>All Recipes</button><button class='all-notes'>View Notes</button><button class='recipe-box'>Recipe Box</button><h1>Recipe Scraper</h1></nav>");
+
         $("#recipes").html("<p>Give us just a moment to find the info</p>");
-        
-        for (var i = 0; i < data.length; i++){
-            $("#recipes").append(`<div class="recipe" data-id=${data[i]._id}><img alt=${data[i].name} src=${data[i].image}><h3><a target="_blank" href="${data[i].link}">${data[i].name}</a></h3><p>${data[i].description}</p><button class= "add-notes" data-id=${data[i]._id}>Add Note</a></button><button class="save-recipe" data-save="false" data-id="${data[i]._id}">Save</button></div>`);
-            
-            if (data[i].note){
-                $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id} href="http://localhost:8080/scrape">View Notes</button>`);
+        $("#recipes").text("");
+        function appendRecipes (){
+            for (var i = 0; i < data.length; i++){
+                $("#recipes").append(`<div class="recipe" data-id=${data[i]._id}><img alt=${data[i].name} src=${data[i].image}><h3><a target="_blank" href="${data[i].link}">${data[i].name}</a></h3><p>${data[i].description}</p><button class= "add-notes" data-id=${data[i]._id}>Add Note</a></button><button class="save-recipe" data-save="false" data-id="${data[i]._id}">Save</button></div>`);
+                
+                if (data[i].note){
+                    $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id} href="http://localhost:8080/scrape">View Notes</button>`);
+                }
             }
         }
+        appendRecipes();
+        
+        $(".view-all-recipes").on("click", function(){
+            appendRecipes();
+        });
 
         $(".add-notes").on("click", function(){
             $("<form action='/add-note' method='post'><h3>Feel Free to Add Your Notes</h3><label for='title'>Title:</label><input type='text' id='title'><label for='body'>Message:</label><input type='text' id='body'><button type='submit' class='submit'>submit</button></form>").modal();
+
             var id = $(this).data("id");
             console.log("ID: " + id);
             $(".submit").on("click", function(event){
                 event.preventDefault();
+                console.log("THis: " + $("#body").val());
                 var newNote = {
                     title: $("#title").val().trim(),
                     body: $("#body").val().trim()
@@ -36,9 +47,11 @@ function getRecipes(){
                     data: newNote
                 })
                 .then(function(note){
-                    console.log(note);
+                    console.log("Added to Notes");
                 });
-                console.log("New Note: " + newNote);
+                $("#recipe").append(`<h3>newNote.title</h3><p>newNote.body</p>`);
+                $(this).attr("class", "close-modal");
+                console.log(newNote);
             });
 
         });
@@ -89,20 +102,33 @@ function getRecipes(){
 
 
         });
+        $(".all-notes").on("click", function(){
+            $.ajax({
+                method: "GET",
+                url: "/notes"
+            })
+            .then(function(notes){
+                console.log(notes);
+                $("#recipes").empty();
+
+                // for (var i = 0; i < recipes.length; i++){
+                //     $("#recipes").append(`<div class="recipe" data-id=${recipes[i]._id}><img alt=${recipes[i].name} src=${recipes[i].image}><h3><a target="_blank" href="${recipes[i].link}">${recipes[i].name}</a></h3><p>${recipes[i].description}</p><button class= "add-notes" data-id=${recipes[i]._id}>Add Note</a></button><button class="delete-recipe" data-id="${recipes[i]._id}">Delete</button></div>`);
+                    
+                // }
+            })
+        })
         $(".recipe-box").on("click", function(){
             $.ajax({
                 method: "GET",
                 url: "/recipe-box"
             }).then(function(recipes){
+                console.log("Saved Recipes: ");
                 console.log(recipes);
-                $(".recipes").empty();
+                $("#recipes").empty();
 
                 for (var i = 0; i < recipes.length; i++){
-                    $("#recipes").append(`<div class="recipe" data-id=${recipes[i]._id}><img alt=${recipes[i].name} src=${recipes[i].image}><h3><a target="_blank" href="${recipes[i].link}">${recipes[i].name}</a></h3><p>${recipes[i].description}</p><button class= "add-notes" data-id=${recipes[i]._id}>Add Note</a></button><button class="save-recipe" data-id="${recipes[i]._id}">Save</button></div>`);
+                    $("#recipes").append(`<div class="recipe" data-id=${recipes[i]._id}><img alt=${recipes[i].name} src=${recipes[i].image}><h3><a target="_blank" href="${recipes[i].link}">${recipes[i].name}</a></h3><p>${recipes[i].description}</p><button class= "add-notes" data-id=${recipes[i]._id}>Add Note</a></button><button class="delete-recipe" data-id="${recipes[i]._id}">Delete</button></div>`);
                     
-                    if (data[i].note){
-                        $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id}>View Notes</button>`);
-                    }
                 }
             });
         });
