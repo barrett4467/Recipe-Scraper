@@ -18,9 +18,9 @@ function getRecipes(){
             for (var i = 0; i < data.length; i++){
                 $("#recipes").append(`<div class="recipe" data-id=${data[i]._id}><img alt=${data[i].name} src=${data[i].image}><h3><a target="_blank" href="${data[i].link}">${data[i].name}</a></h3><p>${data[i].description}</p><button class= "add-notes" data-id=${data[i]._id}>Add Note</a></button><button class="save-recipe" data-save="false" data-id="${data[i]._id}">Save</button></div>`);
                 
-                if (data[i].note){
-                    $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id} href="http://localhost:8080/scrape">View Notes</button>`);
-                }
+                // if (data[i].note){
+                //     $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id} href="http://localhost:8080/scrape">View Notes</button>`);
+                // }
             }
         }
         appendRecipes();
@@ -30,6 +30,7 @@ function getRecipes(){
         });
 
         $(".add-notes").on("click", function(){
+
             $("<form action='/add-note' method='post'><h3>Feel Free to Add Your Notes</h3><label for='title'>Title:</label><input type='text' id='title'><label for='body'>Message:</label><input type='text' id='body'><button type='submit' class='submit'>submit</button></form>").modal();
 
             var id = $(this).data("id");
@@ -48,8 +49,8 @@ function getRecipes(){
                 })
                 .then(function(note){
                     console.log("Added to Notes");
+                    $("#recipe").append(`<h3>note.title</h3><p>note.body</p>`);
                 });
-                $("#recipe").append(`<h3>newNote.title</h3><p>newNote.body</p>`);
                 $(this).attr("class", "close-modal");
                 console.log(newNote);
             });
@@ -111,12 +112,26 @@ function getRecipes(){
                 console.log(notes);
                 $("#recipes").empty();
 
-                // for (var i = 0; i < recipes.length; i++){
-                //     $("#recipes").append(`<div class="recipe" data-id=${recipes[i]._id}><img alt=${recipes[i].name} src=${recipes[i].image}><h3><a target="_blank" href="${recipes[i].link}">${recipes[i].name}</a></h3><p>${recipes[i].description}</p><button class= "add-notes" data-id=${recipes[i]._id}>Add Note</a></button><button class="delete-recipe" data-id="${recipes[i]._id}">Delete</button></div>`);
+                for (var i = 0; i < notes.length; i++){
                     
-                // }
+                    $("#recipes").append(`<div class="recipe" data-id=${notes[i]._id}><h3>${notes[i].title}</a></h3><p>${notes[i].body}</p><button class= "delete-notes" data-id=${notes[i]._id}>Delete Note</a></button><button class="delete-recipe" data-id="${notes[i]._id}">Delete</button></div>`);
+                    
+                }
             })
         })
+
+        var id = $(this).data("id");
+        // $.ajax({
+        //     method: "GET",
+        //     url: "/notes/" + id,
+        // })
+        // .then(function(recipe){
+        //     console.log("Recipe: ");
+        //     console.log(recipe);
+
+        //     $(`<h3>${recipe.note.title}: ${recipe.note.body}</h3>`).modal();
+            
+        // })
         $(".recipe-box").on("click", function(){
             $.ajax({
                 method: "GET",

@@ -50,14 +50,17 @@ app.get("/scrape", function(req, res){
                 image: $(element).find("img").data("original-src"),
                 description: $(element).find("div.fixed-recipe-card__description").text().trim()
             }
-            db.Recipe.deleteMany()
-            .then(function(dbRecipes){
-                console.log("Dropped!!");
-                console.log(dbRecipes);
-            })
+            console.log(recipes);
+            // db.Recipe.deleteMany()
+            // .then(function(dbRecipes){
+            //     console.log("Dropped!!");
+            //     console.log(dbRecipes);
+            // }).then(function(){
+                
+            // })
+            db.Recipe.create(recipes)
             // db.Note.drop();
             // console.log(recipes);
-            db.Recipe.create(recipes)
             .then(function(dbRecipe){
                 console.log(dbRecipe);
             })
@@ -121,14 +124,22 @@ app.post("/recipe-box/:id", function(req, res){
         if (err) res.json(err);
     })
 });
+app.get("/notes", function(req, res){
+    db.Note.find({})
+    .then(function(notes){
+        console.log("This: ");
+        console.log(notes);
+        res.send(notes);
+    });
+});
 app.post("recipe-box/:id", function(req, res){
     db.Recipe.findOneAndUpdate({_id: req.params.id}, {$set: {saved: false}})
     .then(function(deleted){
         res.json(deleted);
     }).catch(function(err){
         if (err) res.json(err);
-    })
-})
+    });
+});
 app.get("/recipe-box", function(req, res){
     db.Recipe.find({saved: true})
     .then(function(saved){
