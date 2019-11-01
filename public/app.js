@@ -1,5 +1,4 @@
 $.getJSON("/recipe", function(data){
-    console.log(data);
     for (var i = 0; i < data.length; i++){
         $("#recipes").append(`<div class="recipe" data-id=${data[i]._id}><img alt=${data[i].name} src=${data[i].image}><h3><a target="_blank" href="${data[i].link}">${data[i].name}</a></h3><p>${data[i].description}</p><button class= "add-notes" data-id=${data[i]._id}>Add Note</a></button><button class="save-recipe" data-id="${data[i]._id}">Save</button></div>`);
         
@@ -34,7 +33,7 @@ $.getJSON("/recipe", function(data){
         var id = $(this).data("id");
         $.ajax({
             method: "GET",
-            url: "/notes/" + id
+            url: "/notes/" + id,
         })
         .then(function(recipe){
             console.log("Recipe: ");
@@ -47,11 +46,31 @@ $.getJSON("/recipe", function(data){
     $(".save-recipe").on("click", function(){
         var id = $(this).attr("data-id");
         console.log(id);
-        this.attr("data-saved", true);
+        console.log($(this));
 
         $.ajax({
             method: "POST",
+            url: "/recipe-box/" + id,
+            data: {test: "Test"}
+        }).then(function(saved){
+            console.log(saved);
+        });
+    });
+    $(".recipe-box").on("click", function(){
+        $.ajax({
+            method: "GET",
             url: "/recipe-box"
+        }).then(function(recipes){
+            console.log(recipes);
+            $(".recipes").empty();
+
+            for (var i = 0; i < recipes.length; i++){
+                $("#recipes").append(`<div class="recipe" data-id=${recipes[i]._id}><img alt=${recipes[i].name} src=${recipes[i].image}><h3><a target="_blank" href="${recipes[i].link}">${recipes[i].name}</a></h3><p>${recipes[i].description}</p><button class= "add-notes" data-id=${recipes[i]._id}>Add Note</a></button><button class="save-recipe" data-id="${recipes[i]._id}">Save</button></div>`);
+                
+                if (data[i].note){
+                    $(".recipe").append(`<button class="view-notes" data-id=${data[i]._id}>View Notes</button>`);
+                }
+            }
         })
     })
     

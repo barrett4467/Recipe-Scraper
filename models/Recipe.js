@@ -5,7 +5,8 @@ var Schema = mongoose.Schema;
 var RecipeSchema = new Schema ({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     link: {
         type: String,
@@ -18,6 +19,10 @@ var RecipeSchema = new Schema ({
     description: {
         type: String,
         required: true
+    },
+    saved: {
+        type: Boolean,
+        default: false
     },
     note: {
         type: Schema.Types.ObjectId,

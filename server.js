@@ -9,8 +9,8 @@ var db = require("./models");
 
 var PORT = process.env.PORT || 8080;
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-mongoose.connect(MONGODB_URI);
+// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+// mongoose.connect(MONGODB_URI);
 
 
 var app = express();
@@ -101,6 +101,25 @@ app.get("/notes/:id", function(req, res){
         if (err) res.json(err);
     });
 });
+app.post("/recipe-box/:id", function(req, res){
+    console.log("Tis Body: ");
+    console.log(req.body);
+    db.Recipe.findOneAndUpdate({_id: req.params.id},{$set: {saved: true}}, {new: true})
+    .then(function(saved){
+        res.json(saved);
+    })
+    .catch(function(err){
+        if (err) res.json(err);
+    })
+});
+app.get("/recipe-box", function(req, res){
+    db.Recipe.find({saved: true})
+    .then(function(saved){
+        console.log("Saved: ");
+        console.log(saved);
+        res.json(saved)
+    })
+})
 
 app.listen(PORT, function(){
     console.log(`App listening on Port: ${PORT}`);
